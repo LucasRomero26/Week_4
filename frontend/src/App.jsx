@@ -47,11 +47,15 @@ function useLatestLocation() {
     }
   };
 
-  useEffect(() => {
-    fetchLatestLocation();
-    const interval = setInterval(fetchLatestLocation, 2000); // Actualizar cada 2 segundos
-    return () => clearInterval(interval);
-  }, []);
+// En: frontend/src/App.jsx
+
+// En: frontend/src/App.jsx
+
+useEffect(() => {
+  // Solo cargamos la última ubicación conocida UNA VEZ al iniciar la app.
+  // Todas las futuras actualizaciones vendrán por WebSocket.
+  fetchLatestLocation();
+}, []); // El array vacío [] es la clave para que solo se ejecute una vez.
 
   return {
     latestLocation,
@@ -94,30 +98,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="container" style={{ paddingTop: '40px' }}>
-        {/* Estado de conexión */}
-        <div className="card" style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '20px' }}>
-              {socketStatus === 'connected' ? '������' : '������'}
-            </span>
-            <span style={{ 
-              fontSize: '18px', 
-              fontWeight: '600',
-              color: socketStatus === 'connected' ? '#059669' : '#dc2626'
-            }}>
-              {socketStatus === 'connected' ? 'Conectado' : 'Desconectado'}
-            </span>
-            <button onClick={refresh} className="btn" style={{ marginLeft: '16px' }}>
-              ������ Actualizar
-            </button>
-          </div>
-          {lastUpdate && (
-            <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280' }}>
-              Última actualización: {new Date(lastUpdate).toLocaleTimeString()}
-            </p>
-          )}
-        </div>
+      <main className="container" style={{ paddingTop: '40px' }}> 
 
         {/* Datos de ubicación */}
         {error ? (
@@ -225,25 +206,6 @@ function App() {
             </button>
           </div>
         )}
-
-        {/* Información del sistema */}
-        <div className="card" style={{ marginTop: '32px', textAlign: 'center' }}>
-          <h3>Información del Sistema</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginTop: '16px' }}>
-            <div>
-              <strong>Backend URL:</strong>
-              <div className="text-mono text-sm">{config.API_BASE_URL}</div>
-            </div>
-            <div>
-              <strong>Puerto UDP:</strong>
-              <div className="text-mono text-sm">6001</div>
-            </div>
-            <div>
-              <strong>Versión:</strong>
-              <div className="text-mono text-sm">v{config.APP_VERSION}</div>
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* Footer */}
